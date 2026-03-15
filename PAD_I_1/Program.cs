@@ -14,7 +14,8 @@ namespace PAD_I_1
             //Aufgabe6();
             //Aufgabe7();
             //Aufgabe8();
-            Aufgabe9();
+            //Aufgabe9();
+            Aufgabe10();
         }
 
 
@@ -283,10 +284,40 @@ namespace PAD_I_1
                 
                 Console.WriteLine($"Es bleiben {rest} von {kloetze} übrig.");
             }
-            
+        }
+        
+        
+        static void Aufgabe10()
+        {
+            Console.Write("Bitte Anzahl Klötze eingeben: ");
+            int kloetze = int.Parse(Console.ReadLine());
+            int pyramideZeile = 1;
+            int pyramideZeileGroesse = 1;
+            int rest = kloetze;
+            List<String> pyramide = new List<String>();
+
+
+            while (rest >= pyramideZeileGroesse)
+            {
+                Console.WriteLine($"Zeile Nr. {pyramideZeile}");
+                
+                pyramideZeile++;
+                rest = rest-pyramideZeileGroesse;
+                pyramideZeileGroesse = pyramideZeileGroesse + 2;
+                
+                Console.WriteLine($"Es bleiben {rest} von {kloetze} übrig.");
+
+                int pyramideZeilePrint = 0;
+                pyramide.Add(new String('X', pyramideZeileGroesse - 2));
+                
+                while (pyramideZeilePrint < pyramide.Count)
+                {
+                    String lücke = new String(' ', pyramide.Count - pyramideZeilePrint - 1);
+                    Console.WriteLine($"{lücke}{pyramide[pyramideZeilePrint]}");
+                    pyramideZeilePrint++;
+                }
+                
+            }
         }
     }
-    
-    
-    
 }
