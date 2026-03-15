@@ -11,7 +11,10 @@ namespace PAD_I_1
             //Aufgabe3();
             //Aufgabe4();
             //Aufgabe5();
-            Aufgabe6();
+            //Aufgabe6();
+            //Aufgabe7();
+            //Aufgabe8();
+            Aufgabe9();
         }
 
 
@@ -225,5 +228,65 @@ namespace PAD_I_1
 
             return seitenlaenge - 1;
         }
+        
+        static void Aufgabe7()
+        {
+            Boolean wantNote = true; 
+            List<float> noten = new List<float>();
+            int wiederholung = 0;
+            
+            while (wantNote) {
+                wiederholung++;
+                Console.WriteLine($"Bitte geben Sie die {wiederholung}. Note ein: ");
+                float note = float.Parse(Console.ReadLine());
+                noten.Add(note);
+                
+                Console.WriteLine($"Das ergibt einen Notendurchschnitt von:  {noten.Sum() /noten.Count}");
+
+                
+                Console.WriteLine("Weitere Note eingeben? (j/n): ");
+                wantNote = Console.ReadLine() == "j";
+            }
+            
+            Console.WriteLine("Vielen Dank!");
+        }
+        
+        static void Aufgabe8()
+        {
+            Console.Write("Bitte Startbuchstabe eingeben: ");
+            char start = Console.ReadLine()[0];
+    
+            Console.Write("Bitte Endbuchstabe eingeben: ");
+            char end = Console.ReadLine()[0];
+    
+            for (char c = start; c <= end; c++)
+            {
+                Console.Write(c);
+            }
+        }
+        
+        
+        static void Aufgabe9()
+        {
+            Console.Write("Bitte Anzahl Klötze eingeben: ");
+            int kloetze = int.Parse(Console.ReadLine());
+            int pyramideZeile = 1;
+            int pyramideZeileGroesse = 1;
+            int rest = kloetze;
+
+            while (rest >= pyramideZeileGroesse)
+            {
+                Console.WriteLine($"Zeile Nr. {pyramideZeile}");
+                pyramideZeile++;
+                rest = rest-pyramideZeileGroesse;
+                pyramideZeileGroesse = pyramideZeileGroesse + 2;
+                
+                Console.WriteLine($"Es bleiben {rest} von {kloetze} übrig.");
+            }
+            
+        }
     }
+    
+    
+    
 }
