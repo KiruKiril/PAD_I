@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C# PAD — Cheat Sheet</title>
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --bg:#111214;--bg2:#1a1b1e;--bg3:#222428;
+            --border:#2e3035;--text:#dde1e7;--text2:#9099a6;--text3:#555d6a;
+            --kw:#569cd6;--cm:#6a9955;--str:#ce9178;--num:#b5cea8;--type:#4ec9b0;
+            --accent:#0078d4;--tag-bg:#1c2733;--tag-text:#58a6ff;
+            --ok:#4ec942;--amber:#c8a96e;--amber-bg:#2a2210;
+        }
+        body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);margin:0}
+        .app{display:flex;height:100vh;overflow:hidden}
+
+        /* SIDEBAR */
+        .sb{width:240px;min-width:240px;background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;padding:0 0 2rem;flex-shrink:0}
+        .sb-logo{font-size:13px;font-weight:700;color:#fff;padding:14px 14px 12px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg2);z-index:1}
+        .sb-logo span{font-weight:400;color:var(--text3);font-size:11px;display:block;margin-top:2px}
+        .ng{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:12px 14px 4px}
+        .ns{height:1px;background:var(--border);margin:6px 0}
+        .nb{display:block;width:100%;text-align:left;background:none;border:none;border-left:3px solid transparent;padding:5px 14px;font-size:12.5px;color:var(--text2);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:background .1s,color .1s,border-color .1s}
+        .nb:hover{background:var(--bg3);color:var(--text)}
+        .nb.active{background:var(--bg3);color:#fff;border-left-color:var(--accent)}
+
+        /* MAIN */
+        .main{flex:1;overflow-y:auto;padding:1.5rem 2rem 5rem}
+        .ph{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border)}
+        .ph h1{font-size:21px;font-weight:500;color:#fff;margin-bottom:3px}
+        .ph p{font-size:12px;color:var(--text3)}
+        .pt{font-size:17px;font-weight:500;color:#fff;margin:2.5rem 0 1rem;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+        /* SECTION */
+        .sec{margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;overflow:hidden;scroll-margin-top:20px}
+        .sh{background:var(--bg2);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border)}
+        .st{font-size:13.5px;font-weight:500;color:#fff}
+        .stag{font-size:11px;color:var(--tag-text);background:var(--tag-bg);border-radius:4px;padding:2px 8px;white-space:nowrap}
+
+        /* SNIPPET */
+        .sn{border-top:1px solid var(--border)}
+        .sl{padding:9px 16px 3px;font-size:12px;color:var(--text2);display:flex;justify-content:space-between;align-items:center;gap:8px}
+        .cb{background:none;border:1px solid var(--border);border-radius:4px;color:var(--text3);font-size:11px;padding:2px 9px;cursor:pointer;font-family:inherit;transition:all .1s;white-space:nowrap;flex-shrink:0}
+        .cb:hover{border-color:var(--accent);color:var(--text)}
+        .cb.ok{border-color:var(--ok);color:var(--ok)}
+        .cp{margin:0;padding:5px 16px 13px;font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:12.5px;line-height:1.65;color:var(--text);white-space:pre;overflow-x:auto;background:var(--bg)}
+
+        /* TABLE (Operatoren) */
+        .otable{width:100%;border-collapse:collapse;font-size:12.5px;font-family:'Cascadia Code','Fira Code',Consolas,monospace;margin:0}
+        .otable th{background:var(--bg3);color:var(--text2);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;padding:7px 14px;text-align:left;border-bottom:1px solid var(--border)}
+        .otable td{padding:6px 14px;border-bottom:1px solid var(--border);vertical-align:top;color:var(--text)}
+        .otable tr:last-child td{border-bottom:none}
+        .otable tr:hover td{background:var(--bg3)}
+        .otable .op{color:var(--kw);font-weight:600;min-width:60px}
+        .otable .ex{color:var(--str)}
+        .otable .res{color:var(--num)}
+        .otable .desc{color:var(--text2);font-family:'Segoe UI',system-ui,sans-serif;font-size:12px}
+
+        /* AUFGABEN */
+        .task{margin-bottom:1.25rem;border:1px solid var(--border);border-radius:10px;overflow:hidden;scroll-margin-top:20px}
+        .th{background:var(--bg2);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;border-bottom:1px solid var(--border);user-select:none}
+        .th:hover{background:var(--bg3)}
+        .tt{font-size:13.5px;font-weight:500;color:#fff}
+        .ttag{font-size:11px;color:var(--amber);background:var(--amber-bg);border-radius:4px;padding:2px 8px;white-space:nowrap}
+        .tb{display:none;background:var(--bg)}
+        .tb.open{display:block}
+        .td{padding:10px 16px 4px;font-size:12px;color:var(--text2);line-height:1.65;border-bottom:1px solid var(--border)}
+        .td .tip{background:var(--bg3);border-left:3px solid var(--accent);padding:6px 10px;margin-top:8px;border-radius:0 4px 4px 0;font-size:12px;color:var(--text2)}
+        .tp2{margin:0;padding:6px 16px 8px;font-family:'Cascadia Code','Fira Code',Consolas,monospace;font-size:12.5px;line-height:1.65;color:var(--text);white-space:pre;overflow-x:auto}
+        .tf{padding:4px 16px 12px}
+
+        /* SYNTAX */
+        .kw{color:var(--kw)} .cm{color:var(--cm);font-style:italic} .str{color:var(--str)} .num{color:var(--num)} .tp{color:var(--type)}
+
+        ::-webkit-scrollbar{width:5px;height:5px}
+        ::-webkit-scrollbar-track{background:transparent}
+        ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+    </style>
+</head>
+<body>
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <nav class="sb" id="sb">
+        <div class="sb-logo">C# PAD Cheat Sheet <span>Ctrl+F zum Suchen</span></div>
+        <div class="ng">Grundlagen</div>
+        <button class="nb" data-id="s-vars">Variablen &amp; Typen</button>
+        <button class="nb" data-id="s-ops">Operatoren</button>
+        <button class="nb" data-id="s-input">Eingabe &amp; Parsing</button>
+        <button class="nb" data-id="s-if">If / Else</button>
+        <button class="nb" data-id="s-switch">Switch-Case</button>
+        <button class="nb" data-id="s-while">While-Schleife</button>
+        <button class="nb" data-id="s-dowhile">Do-While</button>
+        <button class="nb" data-id="s-for">For-Schleife</button>
+        <div class="ns"></div>
+        <div class="ng">Typen &amp; Klassen</div>
+        <button class="nb" data-id="s-methods">Methoden (static)</button>
+        <button class="nb" data-id="s-strings">Strings</button>
+        <button class="nb" data-id="s-arrays">Arrays</button>
+        <button class="nb" data-id="s-list">List&lt;T&gt;</button>
+        <button class="nb" data-id="s-math">Math-Klasse</button>
+        <button class="nb" data-id="s-console">Konsole &amp; Farbe</button>
+        <button class="nb" data-id="s-newstring">new string(char, n)</button>
+        <div class="ns"></div>
+        <div class="ng">Aufgaben 1–10</div>
+        <button class="nb" data-id="a1">Aufgabe 1 — Variablen</button>
+        <button class="nb" data-id="a2">Aufgabe 2 — Gerade/Ungerade</button>
+        <button class="nb" data-id="a3">Aufgabe 3 — Zwei Zahlen</button>
+        <button class="nb" data-id="a4">Aufgabe 4 — Strings</button>
+        <button class="nb" data-id="a5">Aufgabe 5 — Kassensystem</button>
+        <button class="nb" data-id="a6">Aufgabe 6 — Bauklötze Quadrat</button>
+        <button class="nb" data-id="a7">Aufgabe 7 — Notendurchschnitt</button>
+        <button class="nb" data-id="a8">Aufgabe 8 — Buchstabenreihe</button>
+        <button class="nb" data-id="a9">Aufgabe 9 — Pyramide Info</button>
+        <button class="nb" data-id="a10">Aufgabe 10 — Pyramide Grafik</button>
+    </nav>
+
+    <!-- MAIN -->
+    <main class="main" id="main">
+        <div class="ph">
+            <h1>C# PAD — Vollständiges Cheat Sheet</h1>
+            <p>Alle Snippets aus PAD_I &nbsp;·&nbsp; Aufgaben 1–10 komplett &nbsp;·&nbsp; Klick auf Code = kopieren &nbsp;·&nbsp; Ctrl+F zum Suchen</p>
+        </div>
+        <div id="content"></div>
+    </main>
+</div>
+
+<script>
+    /* ── DATA ── */
+    var SECS = [
+        { id:'s-vars', title:'Variablen & Typen', tag:'int · double · bool · string · char · float', snippets:[
+                { l:'Deklaration & Initialisierung', c:
+                        'int    anzahl    = 18;\ndouble temperatur = 22.4;\nbool   aktiv     = false;\nstring name      = "Kiril";\nchar   buchstabe = \'A\';\nfloat  note      = 5.5f;   // f-Suffix nötig bei float-Literal' },
+                { l:'Typgrössen / Wertebereiche (Referenz)', c:
+                        '// int      -2\'147\'483\'648  bis  2\'147\'483\'647\n// double   ~15 Dezimalstellen (64-bit)\n// float    ~7  Dezimalstellen (32-bit)  → braucht f-Suffix\n// bool     true / false\n// char     einzelnes Zeichen in einfachen Anführungszeichen \'A\'\n// string   Text in doppelten Anführungszeichen "Hallo"' },
+                { l:'Ausgabe — String-Interpolation ($"...") und Verkettung', c:
+                        'Console.WriteLine($"Name: {name}, Temp: {temperatur}");\nConsole.WriteLine("Zahl: " + anzahl);          // + Verkettung\nConsole.Write("kein Zeilenumbruch ");           // Write ≠ WriteLine\nConsole.WriteLine($"Formatiert: {3.14159:F2}"); // → 3.14' },
+                { l:'Typumwandlung (Casting)', c:
+                        'int    i = 7;\ndouble d = (double)i;     // int  → double:  7.0\nint    j = (int)3.99;     // double → int:    3  (abgeschnitten!)\nstring s = i.ToString();  // int → string\nfloat  f = (float)d;      // double → float' },
+                { l:'var — Typinferenz', c:
+                        'var x = 42;        // Compiler erkennt: int\nvar s = "Hallo";   // Compiler erkennt: string\nvar d = 3.14;      // Compiler erkennt: double\n// Typ wird einmal festgelegt — kann danach nicht geändert werden' }
+            ]},
+
+        { id:'s-ops', title:'Operatoren', tag:'+ - * / % == != < > && || !', table: true, snippets:[
+                { l:'Arithmetische Operatoren', c:
+                        '// Operator  Beispiel        Ergebnis  Beschreibung\n// +         10 + 3          13        Addition\n// -         10 - 3           7        Subtraktion\n// *         10 * 3          30        Multiplikation\n// /         10 / 3           3        Ganzzahl-Division (kein Rest!)\n// /         (double)10 / 3   3.333    Komma-Division (cast nötig)\n// %         10 % 3           1        Modulo = Rest der Division\n\nint rest = 10 % 3;   // 1\nbool gerade = (zahl % 2 == 0);  // true wenn gerade\nbool durch5 = (zahl % 5 == 0);  // true wenn durch 5 teilbar' },
+                { l:'Vergleichsoperatoren', c:
+                        '// Operator  Bedeutung            Beispiel (a=10, b=3)\n// ==        gleich               a == b  → false\n// !=        ungleich             a != b  → true\n// >         grösser als          a > b   → true\n// <         kleiner als          a < b   → false\n// >=        grösser oder gleich  a >= 10 → true\n// <=        kleiner oder gleich  a <= 3  → false' },
+                { l:'Logische Operatoren', c:
+                        '// &&  UND  — beide Bedingungen müssen wahr sein\nif (alter >= 18 && hatAusweis)\n    Console.WriteLine("Darf eintreten");\n\n// ||  ODER — mindestens eine Bedingung muss wahr sein\nif (istAdmin || istModerator)\n    Console.WriteLine("Hat Rechte");\n\n// !   NICHT — kehrt Wahrheitswert um\nif (!istGesperrt)\n    Console.WriteLine("Zugang erlaubt");' },
+                { l:'Zuweisungs-Kurzschreibweisen', c:
+                        'a++;     // a = a + 1   (Inkrement)\na--;     // a = a - 1   (Dekrement)\na += 5;  // a = a + 5\na -= 3;  // a = a - 3\na *= 2;  // a = a * 2\na /= 4;  // a = a / 4\na %= 3;  // a = a % 3   (Rest)' }
+            ]},
+
+        { id:'s-input', title:'Eingabe & Typumwandlung', tag:'Console.ReadLine · TryParse · Parse', snippets:[
+                { l:'int.TryParse — sicher (kein Crash bei falscher Eingabe)', c:
+                        'Console.Write("Zahl eingeben: ");\nif (int.TryParse(Console.ReadLine(), out int zahl))\n{\n    Console.WriteLine($"Du hast eingegeben: {zahl}");\n}\nelse\n{\n    Console.WriteLine("Das war keine gültige Zahl!");\n}\n// out int zahl → Variable wird direkt befüllt' },
+                { l:'int.Parse — direkt (wirft Exception bei Fehler)', c:
+                        'int n = int.Parse(Console.ReadLine());\n// Wenn Benutzer "abc" eingibt → Programm crasht!\n// → Nur verwenden wenn Eingabe garantiert korrekt ist' },
+                { l:'float.Parse / double.Parse', c:
+                        'float  f = float.Parse(Console.ReadLine());\ndouble d = double.Parse(Console.ReadLine());\n// Achtung: Kommazahl mit , oder . je nach System-Locale' },
+                { l:'Einzelnes Zeichen lesen (erstes Zeichen)', c:
+                        'Console.Write("Buchstabe: ");\nchar c = Console.ReadLine()[0];  // [0] = erstes Zeichen\n// Eingabe "Hallo" → c = \'H\'' },
+                { l:'LeseGanzZahl — Eingabeschleife bis gültig (Aufgabe 5)', c:
+                        'static int LeseGanzZahl(string aufforderung)\n{\n    while (true)\n    {\n        Console.WriteLine(aufforderung);\n        if (int.TryParse(Console.ReadLine(), out int eingabe) && eingabe > 0)\n            return eingabe;  // gültig → zurückgeben\n        Console.WriteLine("Ungültige Eingabe, bitte nochmals.");\n    }\n    // Schleife läuft bis gültige Zahl eingegeben wird\n}' }
+            ]},
+
+        { id:'s-if', title:'If / Else If / Else', tag:'Bedingungen · bool · verschachtelt', snippets:[
+                { l:'Grundstruktur', c:
+                        'if (zahl > 0)\n{\n    Console.WriteLine("Positiv");\n}\nelse if (zahl < 0)\n{\n    Console.WriteLine("Negativ");\n}\nelse\n{\n    Console.WriteLine("Null");\n}' },
+                { l:'Einzeilig (ohne Klammern — nur bei einer Anweisung!)', c:
+                        'if (aktiv)\n    Console.WriteLine("Aktiv!");\nelse\n    Console.WriteLine("Inaktiv.");\n// Achtung: ohne {} gilt nur die NÄCHSTE Zeile als Inhalt' },
+                { l:'bool direkt nutzen', c:
+                        'bool findetStatt = true;\n\nif (findetStatt)                     // ✓ korrekt\n    Console.WriteLine("Findet statt");\n\nif (findetStatt == true)             // ✓ auch korrekt, aber redundant\n    Console.WriteLine("Findet statt");\n\nif (!findetStatt)                    // = if (findetStatt == false)\n    Console.WriteLine("Findet nicht statt");' },
+                { l:'Kombinierte Bedingungen mit && und ||', c:
+                        'int alter = 20;\nbool ausweis = true;\n\nif (alter >= 18 && ausweis)\n    Console.WriteLine("Einlass erlaubt");\n\nif (alter < 18 || !ausweis)\n    Console.WriteLine("Kein Einlass");' },
+                { l:'Verschachteltes if (Bezahlung-Pattern aus Aufgabe 5)', c:
+                        'if (bezahlt > total)\n    Console.WriteLine($"Rückgeld: {bezahlt - total} Fr.");\nelse if (bezahlt < total)\n{\n    Console.WriteLine($"Fehlt noch: {total - bezahlt} Fr.");\n    // weitere Logik...\n}\nelse\n    Console.WriteLine("Exakt bezahlt, danke!");' }
+            ]},
+
+        { id:'s-switch', title:'Switch-Case', tag:'switch · case · default · break', snippets:[
+                { l:'Grundstruktur', c:
+                        'int tag = 3;\nswitch (tag)\n{\n    case 1:\n        Console.WriteLine("Montag");\n        break;\n    case 2:\n        Console.WriteLine("Dienstag");\n        break;\n    case 3:\n        Console.WriteLine("Mittwoch");\n        break;\n    default:\n        Console.WriteLine("Anderer Tag");\n        break;\n}\n// break verhindert Durchfallen in den nächsten case' },
+                { l:'Switch mit string', c:
+                        'string eingabe = Console.ReadLine();\nswitch (eingabe)\n{\n    case "j":\n    case "ja":                        // mehrere cases → gleiche Aktion\n        Console.WriteLine("Ja!");\n        break;\n    case "n":\n    case "nein":\n        Console.WriteLine("Nein!");\n        break;\n    default:\n        Console.WriteLine("Unbekannte Eingabe");\n        break;\n}' },
+                { l:'Switch vs If-Else — wann was?', c:
+                        '// Switch → wenn eine Variable auf FESTE WERTE geprüft wird\n// If-Else → wenn Bereiche oder komplexe Bedingungen geprüft werden\n\n// Switch (gut für feste Werte):\nswitch (note) { case 6: ... case 5: ... }\n\n// If-Else (gut für Bereiche):\nif (note >= 5.5)      Console.WriteLine("Bestanden");\nelse if (note >= 4.0) Console.WriteLine("Ausreichend");\nelse                  Console.WriteLine("Nicht bestanden");' }
+            ]},
+
+        { id:'s-while', title:'While-Schleife', tag:'while · Endlosschleife · break · continue', snippets:[
+                { l:'Standard while — Bedingung VOR dem Schleifenkörper', c:
+                        'int i = 1;\nwhile (i <= 5)\n{\n    Console.WriteLine(i);  // 1 2 3 4 5\n    i++;\n}\n// Wenn Bedingung von Anfang an false → Körper wird NIE ausgeführt' },
+                { l:'while (true) mit break — Endlosschleife', c:
+                        'while (true)\n{\n    Console.Write("Passwort: ");\n    string eingabe = Console.ReadLine();\n    if (eingabe == "1234")\n        break;              // Schleife sofort verlassen\n    Console.WriteLine("Falsch, nochmals!");\n}' },
+                { l:'continue — aktuelle Iteration überspringen', c:
+                        'int i = 0;\nwhile (i < 10)\n{\n    i++;\n    if (i % 2 == 0)\n        continue;           // gerade Zahlen überspringen\n    Console.Write(i + " "); // gibt aus: 1 3 5 7 9\n}' },
+                { l:'Nachzahlung-Schleife (Aufgabe 5 Pattern)', c:
+                        'while (bezahlterBetrag < totalBetrag)\n{\n    int fehlend = totalBetrag - bezahlterBetrag;\n    int nach = LeseGanzZahl($"Noch {fehlend} Fr. fehlen. Betrag: ");\n    bezahlterBetrag += nach;\n}\nConsole.WriteLine("Vollständig bezahlt!");' },
+                { l:'Pyramide-Schleife (Aufgabe 9/10 Pattern)', c:
+                        'int breite = 1, rest = kloetze;\nwhile (rest >= breite)\n{\n    rest   -= breite;   // Klötze dieser Zeile abziehen\n    breite += 2;        // nächste Zeile ist immer 2 breiter\n    // Zeile 1: 1 Klotz, Zeile 2: 3, Zeile 3: 5, Zeile 4: 7 ...\n}' }
+            ]},
+
+        { id:'s-dowhile', title:'Do-While-Schleife', tag:'do-while · mindestens einmal · Eingabe-Validierung', snippets:[
+                { l:'Grundstruktur — Körper wird MINDESTENS EINMAL ausgeführt', c:
+                        'int i = 1;\ndo\n{\n    Console.WriteLine(i);  // 1 2 3 4 5\n    i++;\n} while (i <= 5);\n// Unterschied zu while: Bedingung NACH dem Körper\n// → Körper läuft immer mindestens einmal' },
+                { l:'Unterschied while vs do-while', c:
+                        'int x = 10;\n\n// while: Bedingung sofort false → Körper NIE ausgeführt\nwhile (x < 5)\n    Console.WriteLine("while: " + x);  // gibt nichts aus\n\n// do-while: Körper läuft EINMAL, dann Bedingung prüfen\ndo\n    Console.WriteLine("do-while: " + x); // gibt "do-while: 10" aus\nwhile (x < 5);' },
+                { l:'Klassischer Anwendungsfall: Menü / Eingabe-Validierung', c:
+                        'int eingabe;\ndo\n{\n    Console.Write("Zahl zwischen 1 und 10: ");\n    int.TryParse(Console.ReadLine(), out eingabe);\n    if (eingabe < 1 || eingabe > 10)\n        Console.WriteLine("Ungültig!");\n} while (eingabe < 1 || eingabe > 10);\nConsole.WriteLine($"Gültige Eingabe: {eingabe}");' },
+                { l:'Menü mit do-while', c:
+                        'int wahl;\ndo\n{\n    Console.WriteLine("1 = Neu  2 = Laden  3 = Beenden");\n    int.TryParse(Console.ReadLine(), out wahl);\n    switch (wahl)\n    {\n        case 1: Console.WriteLine("Neues Spiel"); break;\n        case 2: Console.WriteLine("Laden..."); break;\n        case 3: Console.WriteLine("Tschüss!"); break;\n        default: Console.WriteLine("Ungültige Wahl"); break;\n    }\n} while (wahl != 3);' }
+            ]},
+
+        { id:'s-for', title:'For-Schleife', tag:'for · foreach · char-Iteration · verschachtelt', snippets:[
+                { l:'Grundstruktur: for (Init; Bedingung; Schritt)', c:
+                        'for (int i = 0; i < 5; i++)\n{\n    Console.WriteLine(i); // 0 1 2 3 4\n}\n// i=0 → Start\n// i < 5 → weiter solange wahr\n// i++ → nach jeder Iteration' },
+                { l:'Rückwärts zählen', c:
+                        'for (int i = 5; i >= 1; i--)\n{\n    Console.Write(i + " "); // 5 4 3 2 1\n}' },
+                { l:'Schrittweite anpassen', c:
+                        'for (int i = 0; i <= 10; i += 2)\n    Console.Write(i + " "); // 0 2 4 6 8 10\n\nfor (int i = 10; i >= 0; i -= 3)\n    Console.Write(i + " "); // 10 7 4 1' },
+                { l:'Über char-Bereich (Aufgabe 8)', c:
+                        'char start = \'A\';\nchar end   = \'F\';\nfor (char c = start; c <= end; c++)\n{\n    Console.Write(c); // ABCDEF\n}\n// chars können wie Zahlen verglichen und inkrementiert werden' },
+                { l:'Über List<T> iterieren mit Index', c:
+                        'for (int i = 0; i < liste.Count; i++)\n{\n    Console.WriteLine($"[{i}] {liste[i]}");\n}\n// Vorteil: man kennt den Index i' },
+                { l:'foreach — über alle Elemente ohne Index', c:
+                        'foreach (string name in namen)\n{\n    Console.WriteLine(name);\n}\n// Einfacher wenn Index nicht gebraucht wird' },
+                { l:'Verschachtelte for-Schleifen (z.B. Multiplikationstabelle)', c:
+                        'for (int i = 1; i <= 3; i++)\n{\n    for (int j = 1; j <= 3; j++)\n    {\n        Console.Write($"{i*j,3}"); // ,3 = rechtsbündig in 3 Zeichen\n    }\n    Console.WriteLine();\n}\n// Ausgabe:\n//   1  2  3\n//   2  4  6\n//   3  6  9' }
+            ]},
+
+        { id:'s-methods', title:'Methoden (static)', tag:'void · return · Parameter · out · Überladen', snippets:[
+                { l:'void — gibt nichts zurück', c:
+                        'static void SageHallo(string name)\n{\n    Console.WriteLine($"Hallo {name}!");\n}\n// Aufruf:\nSageHallo("Kiril");\nSageHallo("Welt");' },
+                { l:'Methode mit Rückgabewert', c:
+                        'static int Addiere(int a, int b)\n{\n    return a + b;\n}\nstatic double Durchschnitt(double summe, int count)\n{\n    return summe / count;\n}\n// Aufrufe:\nint res = Addiere(3, 4);          // 7\ndouble avg = Durchschnitt(15, 3); // 5.0' },
+                { l:'bool-Methode (Prüfung / Validierung)', c:
+                        'static bool IstGerade(int zahl)\n{\n    return zahl % 2 == 0;\n}\nstatic bool IstGueltigeNote(float note)\n{\n    return note >= 1.0f && note <= 6.0f;\n}\n// Aufrufe:\nif (IstGerade(8))           Console.WriteLine("Gerade");\nif (IstGueltigeNote(5.5f))  Console.WriteLine("Gültig");' },
+                { l:'out-Parameter — mehrere Werte zurückgeben', c:
+                        '// Methode befüllt die out-Variable direkt\nstatic bool TryTeile(int a, int b, out int ergebnis)\n{\n    if (b == 0) { ergebnis = 0; return false; }\n    ergebnis = a / b;\n    return true;\n}\n// Aufruf:\nif (TryTeile(10, 2, out int res))\n    Console.WriteLine($"Ergebnis: {res}"); // 5' },
+                { l:'private vs static — Sichtbarkeit', c:
+                        '// static: erreichbar von Main aus\nstatic void OeffentlicheMethode() { }\n\n// private static: nur innerhalb der Klasse\nprivate static void Helfer() { }\n\n// Faustregel: Hilfsmethoden → private static\n//             Aufgaben-Methoden → static (für Main erreichbar)' },
+                { l:'Methodenaufruf-Kette (Aufgabe 5 Pattern)', c:
+                        '// Main ruft Aufgabe5 auf\n// Aufgabe5 ruft PruefeBezahlung auf\n// PruefeBezahlung ruft ggf. BearbeiteNachzahlung auf\n// Alle rufen LeseGanzZahl auf\n\n// Vorteil: jede Methode macht EINE Sache (Single Responsibility)' }
+            ]},
+
+        { id:'s-strings', title:'Strings', tag:'.Length · [] · Contains · ToUpper · Split', snippets:[
+                { l:'Alle wichtigen String-Properties und Methoden', c:
+                        'string wort = "Hallo Welt";\n\nint    len    = wort.Length;            // 10\nchar   erster = wort[0];               // \'H\'\nchar   letzt  = wort[wort.Length-1];   // \'t\'\nstring gross  = wort.ToUpper();        // "HALLO WELT"\nstring klein  = wort.ToLower();        // "hallo welt"\nstring trim   = "  hi  ".Trim();       // "hi"\nbool   hatH   = wort.Contains("Hallo"); // true\nbool   startH = wort.StartsWith("Ha"); // true\nbool   endsW  = wort.EndsWith("lt");   // true\nint    pos    = wort.IndexOf("Welt");  // 6\nstring teil   = wort.Substring(6, 4); // "Welt"\nstring ersetz = wort.Replace("Welt","C#"); // "Hallo C#"' },
+                { l:'char-Prüfungen (für einzelne Zeichen)', c:
+                        'char c = \'A\';\nbool upper  = char.IsUpper(c);   // true\nbool lower  = char.IsLower(c);   // false\nbool digit  = char.IsDigit(\'5\'); // true\nbool letter = char.IsLetter(c);  // true\nbool space  = char.IsWhiteSpace(\' \'); // true\n\n// Zeichen vergleichen:\nif (c == \'A\')  Console.WriteLine("Ist A");\nif (c == \'a\')  Console.WriteLine("Ist a");  // Gross/Klein verschieden!' },
+                { l:'String splitten und zusammensetzen', c:
+                        'string csv = "Anna,Bob,Claudio";\nstring[] teile = csv.Split(\',\');  // ["Anna", "Bob", "Claudio"]\nConsole.WriteLine(teile[0]);       // "Anna"\nConsole.WriteLine(teile.Length);   // 3\n\nstring joined = string.Join(" | ", teile); // "Anna | Bob | Claudio"' },
+                { l:'Zahlen formatieren in Strings', c:
+                        'double pi = 3.14159;\nConsole.WriteLine($"{pi:F2}");   // "3.14"  (2 Dezimalstellen)\nConsole.WriteLine($"{pi:F0}");   // "3"\nConsole.WriteLine($"{42:D5}");   // "00042" (5 Stellen mit Nullen)' }
+            ]},
+
+        { id:'s-arrays', title:'Arrays', tag:'int[] · string[] · Length · for · foreach', snippets:[
+                { l:'Array erstellen — feste Grösse, Typ gleich', c:
+                        '// Deklarieren und initialisieren\nint[]    zahlen = new int[5];             // [0,0,0,0,0]\nstring[] namen  = new string[3];          // [null,null,null]\n\n// Deklarieren mit Werten\nint[]    noten  = { 6, 5, 4, 5, 6 };\nstring[] tage   = { "Mo","Di","Mi","Do","Fr" };\n\n// Länge\nConsole.WriteLine(noten.Length);          // 5' },
+                { l:'Array lesen und schreiben', c:
+                        'int[] zahlen = { 10, 20, 30, 40, 50 };\n\nConsole.WriteLine(zahlen[0]);   // 10  (Index beginnt bei 0!)\nConsole.WriteLine(zahlen[4]);   // 50  (letztes Element)\n\nzahlen[2] = 99;                 // Element ändern\nConsole.WriteLine(zahlen[2]);   // 99' },
+                { l:'Array mit for-Schleife durchlaufen', c:
+                        'int[] noten = { 6, 5, 4, 5, 6 };\nint summe = 0;\n\nfor (int i = 0; i < noten.Length; i++)\n{\n    summe += noten[i];\n    Console.WriteLine($"Note {i+1}: {noten[i]}");\n}\ndouble avg = (double)summe / noten.Length;\nConsole.WriteLine($"Durchschnitt: {avg:F2}");' },
+                { l:'Array mit foreach durchlaufen', c:
+                        'string[] tage = { "Mo","Di","Mi","Do","Fr" };\n\nforeach (string tag in tage)\n{\n    Console.WriteLine(tag);\n}\n// Einfacher wenn Index nicht gebraucht wird' },
+                { l:'Array vs List<T> — Unterschied', c:
+                        '// Array → feste Grösse, schneller Zugriff\nint[] arr = new int[5];\n// arr.Length = 5, kann NICHT wachsen\n\n// List<T> → dynamisch, kann wachsen\nList<int> lst = new List<int>();\nlst.Add(1); lst.Add(2); lst.Add(3);\n// lst.Count = 3\n\n// Faustregel:\n// Anzahl bekannt und fix  → Array\n// Anzahl unbekannt        → List<T>' },
+                { l:'Nützliche Array-Methoden', c:
+                        'int[] z = { 5, 2, 8, 1, 9, 3 };\n\nArray.Sort(z);                    // [1,2,3,5,8,9] (aufsteigend)\nArray.Reverse(z);                 // [9,8,5,3,2,1]\nint max = z.Max();                // 9  (mit using System.Linq)\nint min = z.Min();                // 1\nint sum = z.Sum();                // 28\nint idx = Array.IndexOf(z, 5);   // Index von Wert 5' }
+            ]},
+
+        { id:'s-list', title:'List<T>', tag:'Add · Count · Sum · Max · Min · Remove · Contains', snippets:[
+                { l:'List erstellen und befüllen', c:
+                        '// Verschiedene Typen:\nList<int>    zahlen = new List<int>();\nList<float>  noten  = new List<float>();\nList<string> namen  = new List<string>();\n\n// Elemente hinzufügen:\nnoten.Add(5.5f);\nnoten.Add(4.0f);\nnoten.Add(3.5f);\n\n// Mit Startwerten:\nList<string> tage = new List<string> { "Mo","Di","Mi" };' },
+                { l:'Alle wichtigen List-Operationen', c:
+                        'List<float> noten = new List<float> { 5.5f, 4.0f, 3.5f, 6.0f };\n\nint   anz    = noten.Count;               // 4\nfloat summe  = noten.Sum();               // 19.0\nfloat avg    = noten.Sum() / noten.Count; // 4.75\nfloat max    = noten.Max();               // 6.0\nfloat min    = noten.Min();               // 3.5\nfloat erst   = noten[0];                 // 5.5  (Index)\nbool  hatX   = noten.Contains(4.0f);     // true\n\nnoten.Remove(3.5f);    // entfernt ersten Treffer\nnoten.RemoveAt(0);     // entfernt Element an Index 0\nnoten.Clear();         // leert die ganze Liste' },
+                { l:'Notendurchschnitt-Pattern (Aufgabe 7)', c:
+                        'List<float> noten = new List<float>();\nbool weiter = true;\nint runde = 0;\n\nwhile (weiter)\n{\n    runde++;\n    Console.Write($"Note {runde}: ");\n    float note = float.Parse(Console.ReadLine());\n    noten.Add(note);\n    Console.WriteLine($"Akt. Durchschnitt: {noten.Sum() / noten.Count:F2}");\n    Console.Write("Weitere Note? (j/n): ");\n    weiter = Console.ReadLine() == "j";\n}\nConsole.WriteLine($"Finale Noten: {noten.Count}, Ø {noten.Sum()/noten.Count:F2}");' },
+                { l:'List<string> für Pyramide (Aufgabe 10)', c:
+                        'List<string> pyramide = new List<string>();\npyramide.Add(new string(\'X\', 1)); // "X"\npyramide.Add(new string(\'X\', 3)); // "XXX"\npyramide.Add(new string(\'X\', 5)); // "XXXXX"\n\n// Zentriert ausgeben:\nfor (int i = 0; i < pyramide.Count; i++)\n{\n    int leerzeichen = pyramide.Count - i - 1;\n    string pad = new string(\' \', leerzeichen);\n    Console.WriteLine(pad + pyramide[i]);\n}\n//   X\n//  XXX\n// XXXXX' }
+            ]},
+
+        { id:'s-math', title:'Math-Klasse', tag:'Max · Min · Abs · Sqrt · Pow · Round', snippets:[
+                { l:'Alle wichtigen Math-Methoden', c:
+                        'int    grMax  = Math.Max(5, 9);       // 9      — grösserer Wert\nint    klMin  = Math.Min(5, 9);       // 5      — kleinerer Wert\nint    abs    = Math.Abs(-7);         // 7      — Betrag (immer positiv)\ndouble wurzel = Math.Sqrt(16);        // 4.0    — Quadratwurzel\ndouble potenz = Math.Pow(2, 10);      // 1024.0 — 2^10\ndouble pi     = Math.PI;              // 3.14159...\nint    gerund = (int)Math.Round(3.7); // 4      — kaufm. Runden\ndouble floor  = Math.Floor(3.9);      // 3.0    — abrunden\ndouble ceil   = Math.Ceiling(3.1);    // 4.0    — aufrunden' },
+                { l:'Quadratische Seitenlänge berechnen (Aufgabe 6 Pattern)', c:
+                        'static int BerechneMaximaleSeitenlaenge(int anzahlBaukloetze)\n{\n    int seite = 1;\n    while (seite * seite <= anzahlBaukloetze)\n        seite++;\n    return seite - 1;  // Schritt zurück: letzte gültige Seite\n}\n// Beispiel:\n// 17 Klötze → Seite 4 (4×4=16 ≤ 17), Seite 5 wäre 25 > 17\n// Ergebnis: Seite=4, benötigt=16, Rest=1' }
+            ]},
+
+        { id:'s-console', title:'Konsole & Farbe', tag:'ForegroundColor · ResetColor · Write · Clear', snippets:[
+                { l:'Farbige Ausgabe — ForegroundColor (Aufgabe 5)', c:
+                        'Console.ForegroundColor = ConsoleColor.Red;\nConsole.WriteLine("Fehler! Zu wenig bezahlt.");\nConsole.ResetColor();   // IMMER danach zurücksetzen!\n\nConsole.ForegroundColor = ConsoleColor.Green;\nConsole.WriteLine("Erfolg! Vielen Dank.");\nConsole.ResetColor();\n\nConsole.ForegroundColor = ConsoleColor.Yellow;\nConsole.WriteLine("Warnung!");\nConsole.ResetColor();' },
+                { l:'Alle ConsoleColor-Werte', c:
+                        '// Dunkel:                 Hell:\nConsoleColor.Black          ConsoleColor.DarkGray\nConsoleColor.DarkBlue       ConsoleColor.Blue\nConsoleColor.DarkGreen      ConsoleColor.Green\nConsoleColor.DarkCyan       ConsoleColor.Cyan\nConsoleColor.DarkRed        ConsoleColor.Red\nConsoleColor.DarkMagenta    ConsoleColor.Magenta\nConsoleColor.DarkYellow     ConsoleColor.Yellow\nConsoleColor.Gray           ConsoleColor.White' },
+                { l:'Write vs WriteLine vs Clear', c:
+                        'Console.Write("kein Umbruch ");    // bleibt in gleicher Zeile\nConsole.Write("weiter ");\nConsole.WriteLine();               // nur Zeilenumbruch\nConsole.WriteLine("Text + \\n");    // Text mit Umbruch\nConsole.Clear();                   // Konsole leeren' }
+            ]},
+
+        { id:'s-newstring', title:'new string(char, n)', tag:'Zeichen wiederholen · Padding · Pyramide', snippets:[
+                { l:'Zeichenkette aus wiederholtem Zeichen', c:
+                        'string linie  = new string(\'-\', 20); // "--------------------"\nstring luecke = new string(\' \', 5);  // "     " (5 Leerzeichen)\nstring balken = new string(\'X\', 7);  // "XXXXXXX"\nstring punkte = new string(\'.\', 3);  // "..."\nstring sterne = new string(\'*\', 10); // "**********"' },
+                { l:'Zentrieren-Pattern für Pyramide (Aufgabe 10)', c:
+                        '// Breite der breitesten Zeile = Anzahl Zeilen * 2 - 1\n// Leerzeichen links = (Gesamtbreite - Zeilenbreite) / 2\n\nList<string> zeilen = new List<string>();\nzeilen.Add(new string(\'X\', 1)); // Zeile 1: "X"\nzeilen.Add(new string(\'X\', 3)); // Zeile 2: "XXX"\nzeilen.Add(new string(\'X\', 5)); // Zeile 3: "XXXXX"\n\nfor (int i = 0; i < zeilen.Count; i++)\n{\n    // Leerzeichen = Anzahl Zeilen - aktuelle Zeile - 1\n    string pad = new string(\' \', zeilen.Count - i - 1);\n    Console.WriteLine(pad + zeilen[i]);\n}\n// Ausgabe:\n//   X\n//  XXX\n// XXXXX' }
+            ]}
+    ];
+
+    var AUFGABEN = [
+        { id:'a1', title:'Aufgabe 1 — Variablen ausgeben', tag:'int · double · bool · if-else',
+            desc:'Drei Variablen deklarieren und ausgeben. Bool-Variable mit if/else auswerten.',
+            tips:['findetUnterrichtStatt ist false → else-Zweig wird ausgeführt','Konkatenation mit + oder $"..." möglich'],
+            code:'static void Aufgabe1()\n{\n    int anzahlTeilnehmende = 18;\n    double temperatur = 22.4;\n    bool findetUnterrichtStatt = false;\n\n    Console.WriteLine("Anzahl Teilnehmende: " + anzahlTeilnehmende);\n    Console.WriteLine("Aktuelle Temperatur: " + temperatur);\n\n    if (findetUnterrichtStatt)\n        Console.WriteLine("Heute findet Unterricht statt");\n    else\n        Console.WriteLine("Heute findet kein Unterricht statt");\n}' },
+
+        { id:'a2', title:'Aufgabe 2 — Gerade oder Ungerade', tag:'TryParse · Modulo · if-else',
+            desc:'Zahl einlesen, mit TryParse parsen, mit Modulo (%) auf gerade/ungerade prüfen. Fehlerbehandlung wenn keine Zahl eingegeben.',
+            tips:['zahl % 2 == 0 → gerade, zahl % 2 != 0 → ungerade','TryParse gibt false zurück wenn Eingabe keine Zahl'],
+            code:'static void Aufgabe2()\n{\n    Console.WriteLine("Bitte geben Sie eine Zahl ein: ");\n    string eingabe = Console.ReadLine();\n\n    // int.TryParse: sicher, kein Crash bei falscher Eingabe\n    if (int.TryParse(eingabe, out int zahl))\n    {\n        if (zahl % 2 == 0)\n            Console.WriteLine("Die Zahl ist gerade");\n        else\n            Console.WriteLine("Die Zahl ist ungerade");\n    }\n    else\n    {\n        Console.WriteLine("Keine gültige Zahl eingegeben!");\n    }\n}' },
+
+        { id:'a3', title:'Aufgabe 3 — Zwei Zahlen vergleichen', tag:'Math.Max · Math.Min · Differenz',
+            desc:'Zwei Zahlen einlesen. Summe berechnen, grössere Zahl finden, Differenz berechnen (immer positiv).',
+            tips:['Math.Max(a, b) gibt die grössere Zahl zurück','Differenz = Max - Min, damit immer positiv'],
+            code:'static void Aufgabe3()\n{\n    Console.WriteLine("Bitte geben Sie Ihre erste Zahl ein: ");\n    int.TryParse(Console.ReadLine(), out int zahl1);\n    Console.WriteLine("Bitte geben Sie Ihre zweite Zahl ein: ");\n    int.TryParse(Console.ReadLine(), out int zahl2);\n\n    // Summe\n    Console.WriteLine($"Die Summe von {zahl1} und {zahl2} lautet: {zahl1 + zahl2}");\n\n    // Grössere Zahl\n    Console.WriteLine($"Die grössere Zahl: {Math.Max(zahl1, zahl2)}");\n\n    // Differenz (immer positiv)\n    int diff = Math.Max(zahl1, zahl2) - Math.Min(zahl1, zahl2);\n    Console.WriteLine($"Die Differenz: {diff}");\n}' },
+
+        { id:'a4', title:'Aufgabe 4 — String-Analyse', tag:'.Length · [] · IsUpper · Contains',
+            desc:'Wort einlesen. Länge ausgeben, erstes/letztes Zeichen, Grossbuchstabe prüfen, auf \'a\' prüfen.',
+            tips:['Index beginnt bei 0 → wort[0] ist erstes Zeichen','wort[wort.Length-1] ist das letzte Zeichen','char.IsUpper() prüft ob Grossbuchstabe'],
+            code:'static void Aufgabe4()\n{\n    Console.WriteLine("Bitte geben Sie ein Wort ein: ");\n    string eingabe = Console.ReadLine();\n\n    // Länge\n    Console.WriteLine($"Ihr Wort beinhaltet {eingabe.Length} Buchstaben");\n\n    // Erstes und letztes Zeichen\n    Console.WriteLine($"Erster Buchstabe: {eingabe[0]}");\n    Console.WriteLine($"Letzter Buchstabe: {eingabe[eingabe.Length - 1]}");\n\n    // Gross oder Kleinbuchstabe?\n    if (char.IsUpper(eingabe[0]))\n        Console.WriteLine($"Grossbuchstabe: {eingabe[0]}");\n    else\n        Console.WriteLine($"Kleinbuchstabe: {eingabe[0]}");\n\n    // Beginnt mit \'a\'?\n    if (eingabe[0] == \'a\')\n        Console.WriteLine("Das Wort beginnt mit \'a\'");\n\n    // Enthält \'a\'?\n    if (eingabe.Contains(\'a\'))\n        Console.WriteLine("Das Wort enthält ein \'a\'");\n}' },
+
+        { id:'a5', title:'Aufgabe 5 — Kassensystem', tag:'Methoden · while · ConsoleColor · private',
+            desc:'Betrag und Zahlung einlesen. Rückgeld ausgeben wenn zu viel, Nachzahlung verlangen wenn zu wenig. Farbige Ausgabe (Grün = OK, Rot = Fehler). Schleife bis vollständig bezahlt.',
+            tips:['LeseGanzZahl kapselt die Eingabe-Validierung','PruefeBezahlung delegiert an BearbeiteNachzahlung','while-Schleife in BearbeiteNachzahlung läuft bis bezahlt >= total'],
+            code:'static void Aufgabe5()\n{\n    int totalBetrag     = LeseGanzZahl("Bitte geben Sie den Total Betrag ein");\n    int bezahlterBetrag = LeseGanzZahl("Bitte geben Sie den bezahlten Betrag ein");\n    PruefeBezahlung(totalBetrag, bezahlterBetrag);\n}\n\nprivate static void PruefeBezahlung(int totalBetrag, int bezahlterBetrag)\n{\n    if (bezahlterBetrag > totalBetrag)\n        GebenGrueneAusgabe($"Rückgeld: {bezahlterBetrag - totalBetrag} Fr.");\n    else if (bezahlterBetrag < totalBetrag)\n    {\n        GebenRoteAusgabe($"Differenz: {totalBetrag - bezahlterBetrag} Fr.");\n        BearbeiteNachzahlung(totalBetrag, bezahlterBetrag);\n    }\n    else\n        GebenGrueneAusgabe("Vielen Dank für Ihren Einkauf.");\n}\n\nprivate static void BearbeiteNachzahlung(int totalBetrag, int bezahlterBetrag)\n{\n    while (bezahlterBetrag < totalBetrag)\n    {\n        int nach = LeseGanzZahl($"Bitte zahlen Sie den fehlenden Betrag ein (es fehlen {totalBetrag - bezahlterBetrag}): ");\n        bezahlterBetrag += nach;\n        if (bezahlterBetrag == totalBetrag)\n            GebenGrueneAusgabe("Vielen Dank für Ihren Einkauf.");\n        else if (bezahlterBetrag > totalBetrag)\n            GebenGrueneAusgabe($"Rückgeld: {bezahlterBetrag - totalBetrag} Fr.");\n    }\n}\n\nprivate static void GebenRoteAusgabe(string text)\n{\n    Console.ForegroundColor = ConsoleColor.Red;\n    Console.WriteLine(text);\n    Console.ResetColor();\n}\n\nprivate static void GebenGrueneAusgabe(string text)\n{\n    Console.ForegroundColor = ConsoleColor.Green;\n    Console.WriteLine(text);\n    Console.ResetColor();\n}\n\nstatic int LeseGanzZahl(string aufforderung)\n{\n    while (true)\n    {\n        Console.WriteLine(aufforderung);\n        int.TryParse(Console.ReadLine(), out int eingabe);\n        if (eingabe > 0)\n            return eingabe;\n        GebenRoteAusgabe("Ungültige Eingabe!");\n    }\n}' },
+
+        { id:'a6', title:'Aufgabe 6 — Grösstes Quadrat aus Bauklötzen', tag:'while · Methode · Math',
+            desc:'Anzahl Bauklötze eingeben. Grösste mögliche quadratische Seitenlänge berechnen (solange Seite² ≤ Klötze). Benötigte und übrige Klötze ausgeben.',
+            tips:['seite++ so lange seite*seite <= anzahl','return seite-1 weil letztes Inkrement zu weit gegangen','benoetigt = seitenlaenge * seitenlaenge'],
+            code:'static void Aufgabe6()\n{\n    int anzahlBaukloetze = LeseGanzZahl("Wie viele Bauklötze hast du? ");\n    int seitenlaenge     = BerechneMaximaleSeitenlaenge(anzahlBaukloetze);\n    int benoetigteBaukloetze = seitenlaenge * seitenlaenge;\n\n    Console.WriteLine($"Maximale Seitenlänge: {seitenlaenge}");\n    Console.WriteLine($"Benötigte Bauklötze: {benoetigteBaukloetze}");\n    Console.WriteLine($"Übrige Bauklötze: {anzahlBaukloetze - benoetigteBaukloetze}");\n}\n\nstatic int BerechneMaximaleSeitenlaenge(int anzahlBaukloetze)\n{\n    int seitenlaenge = 1;\n    while (seitenlaenge * seitenlaenge <= anzahlBaukloetze)\n        seitenlaenge++;\n    return seitenlaenge - 1;\n}\n// Beispiel: 17 Klötze\n// seite=1: 1≤17 ✓ | seite=2: 4≤17 ✓ | seite=3: 9≤17 ✓\n// seite=4: 16≤17 ✓ | seite=5: 25≤17 ✗ → return 4' },
+
+        { id:'a7', title:'Aufgabe 7 — Notendurchschnitt', tag:'List<float> · Sum · while · float.Parse',
+            desc:'Noten einlesen und in List<float> speichern. Nach jeder Note den aktuellen Durchschnitt berechnen. Abbruch wenn Benutzer "n" eingibt.',
+            tips:['noten.Sum() / noten.Count = Durchschnitt','Console.ReadLine() == "j" → gibt bool zurück','wiederholung++ für Nummerierung der Note'],
+            code:'static void Aufgabe7()\n{\n    Boolean wantNote = true;\n    List<float> noten = new List<float>();\n    int wiederholung = 0;\n\n    while (wantNote)\n    {\n        wiederholung++;\n        Console.WriteLine($"Bitte geben Sie die {wiederholung}. Note ein: ");\n        float note = float.Parse(Console.ReadLine());\n        noten.Add(note);\n\n        Console.WriteLine($"Das ergibt einen Notendurchschnitt von: {noten.Sum() / noten.Count}");\n\n        Console.WriteLine("Weitere Note eingeben? (j/n): ");\n        wantNote = Console.ReadLine() == "j";\n    }\n    Console.WriteLine("Vielen Dank!");\n}' },
+
+        { id:'a8', title:'Aufgabe 8 — Buchstabenreihe ausgeben', tag:'for · char · ReadLine()[0]',
+            desc:'Start- und Endbuchstabe einlesen (erstes Zeichen der Eingabe). Alle Zeichen von Start bis End mit for-Schleife über char ausgeben.',
+            tips:['Console.ReadLine()[0] = erstes Zeichen der Eingabe','char kann wie int verglichen und inkrementiert werden','c++ bei char geht zu nächstem ASCII-Zeichen'],
+            code:'static void Aufgabe8()\n{\n    Console.Write("Bitte Startbuchstabe eingeben: ");\n    char start = Console.ReadLine()[0];\n\n    Console.Write("Bitte Endbuchstabe eingeben: ");\n    char end = Console.ReadLine()[0];\n\n    for (char c = start; c <= end; c++)\n    {\n        Console.Write(c);\n    }\n}\n// Beispiel: Start=A, End=F → Ausgabe: ABCDEF' },
+
+        { id:'a9', title:'Aufgabe 9 — Pyramide (Zeileninfo)', tag:'while · Zeilenzähler · Rest',
+            desc:'Bauklötze eingeben. Zeilen aufbauen: jede Zeile ist 2 breiter als die vorherige (1, 3, 5, 7 ...). Nach jeder Zeile Rest ausgeben.',
+            tips:['pyramideZeileGroesse beginnt bei 1 und += 2 pro Runde','rest -= pyramideZeileGroesse vor dem Erhöhen','Schleife läuft solange rest >= aktuelle Zeilenbreite'],
+            code:'static void Aufgabe9()\n{\n    Console.Write("Bitte Anzahl Klötze eingeben: ");\n    int kloetze = int.Parse(Console.ReadLine());\n    int pyramideZeile = 1;\n    int pyramideZeileGroesse = 1;\n    int rest = kloetze;\n\n    while (rest >= pyramideZeileGroesse)\n    {\n        Console.WriteLine($"Zeile Nr. {pyramideZeile}");\n        pyramideZeile++;\n        rest = rest - pyramideZeileGroesse;\n        pyramideZeileGroesse = pyramideZeileGroesse + 2;\n        Console.WriteLine($"Es bleiben {rest} von {kloetze} übrig.");\n    }\n}\n// 9 Klötze: Zeile1(1), Zeile2(3), Zeile3(5) → Rest 0' },
+
+        { id:'a10', title:'Aufgabe 10 — Pyramide grafisch', tag:'List<string> · new string · Padding',
+            desc:'Wie Aufgabe 9, aber die Pyramide wird grafisch als zentriertes Dreieck ausgegeben. Jede neue Zeile wird in List<string> gespeichert und die ganze Pyramide neu gedruckt.',
+            tips:['pyramide.Add(new string(\'X\', breite)) — Zeile als String speichern','Leerzeichen = pyramide.Count - i - 1','Innere for-Schleife druckt ALLE bisherigen Zeilen neu'],
+            code:'static void Aufgabe10()\n{\n    Console.Write("Bitte Anzahl Klötze eingeben: ");\n    int kloetze = int.Parse(Console.ReadLine());\n    int pyramideZeile = 1;\n    int pyramideZeileGroesse = 1;\n    int rest = kloetze;\n    List<string> pyramide = new List<string>();\n\n    while (rest >= pyramideZeileGroesse)\n    {\n        Console.WriteLine($"Zeile Nr. {pyramideZeile}");\n        pyramideZeile++;\n        rest = rest - pyramideZeileGroesse;\n        pyramideZeileGroesse = pyramideZeileGroesse + 2;\n        Console.WriteLine($"Es bleiben {rest} von {kloetze} übrig.");\n\n        // Zeile als String speichern (Breite = pyramideZeileGroesse - 2)\n        pyramide.Add(new string(\'X\', pyramideZeileGroesse - 2));\n\n        // Ganze Pyramide neu ausgeben (zentriert)\n        for (int i = 0; i < pyramide.Count; i++)\n        {\n            string luecke = new string(\' \', pyramide.Count - i - 1);\n            Console.WriteLine(luecke + pyramide[i]);\n        }\n    }\n}\n// Bei 9 Klötzen nach Zeile 3:\n//   X\n//  XXX\n// XXXXX' }
+    ];
+
+    /* ── HELPERS ── */
+    function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    function hi(code){ return esc(code); }
+
+    window.doCopy=function(btn,pid){
+        var el=document.getElementById(pid);
+        if(!el)return;
+        navigator.clipboard.writeText(el.textContent).then(function(){
+            btn.textContent='✓ Kopiert';btn.classList.add('ok');
+            setTimeout(function(){btn.textContent='Kopieren';btn.classList.remove('ok');},1200);
+        });
+    };
+
+    window.toggleTask=function(head){
+        head.nextElementSibling.classList.toggle('open');
+    };
+
+    /* ── RENDER ── */
+    function mkSnip(sn){
+        var pid='p'+Math.random().toString(36).slice(2,8);
+        return '<div class="sn">'
+            +'<div class="sl"><span>'+esc(sn.l)+'</span>'
+            +'<button class="cb" onclick="doCopy(this,\''+pid+'\')">Kopieren</button></div>'
+            +'<pre class="cp" id="'+pid+'">'+hi(sn.c)+'</pre>'
+            +'</div>';
+    }
+
+    function mkSec(sec){
+        var snips=sec.snippets.map(mkSnip).join('');
+        return '<div class="sec" id="'+sec.id+'">'
+            +'<div class="sh"><span class="st">'+esc(sec.title)+'</span>'
+            +'<span class="stag">'+esc(sec.tag)+'</span></div>'
+            +snips+'</div>';
+    }
+
+    function mkTask(a){
+        var pid='p'+Math.random().toString(36).slice(2,8);
+        var tipsHtml='';
+        if(a.tips&&a.tips.length){
+            tipsHtml='<div class="tip">💡 '
+                +a.tips.map(function(t){return esc(t);}).join('<br>💡 ')
+                +'</div>';
+        }
+        return '<div class="task" id="'+a.id+'">'
+            +'<div class="th" onclick="toggleTask(this)">'
+            +'<span class="tt">'+esc(a.title)+'</span>'
+            +'<span class="ttag">'+esc(a.tag)+'</span>'
+            +'</div>'
+            +'<div class="tb">'
+            +'<div class="td">'+esc(a.desc)+tipsHtml+'</div>'
+            +'<pre class="tp2" id="'+pid+'">'+hi(a.code)+'</pre>'
+            +'<div class="tf"><button class="cb" onclick="doCopy(this,\''+pid+'\')">Kopieren</button></div>'
+            +'</div></div>';
+    }
+
+    /* ── INIT ── */
+    var html='';
+    SECS.forEach(function(s){ html+=mkSec(s); });
+    html+='<div class="pt">Aufgaben 1–10 — Vollständiger Code</div>';
+    AUFGABEN.forEach(function(a){ html+=mkTask(a); });
+    document.getElementById('content').innerHTML=html;
+
+    /* ── NAV ── */
+    document.querySelectorAll('.nb[data-id]').forEach(function(btn){
+        btn.addEventListener('click',function(){
+            var id=this.dataset.id;
+            document.querySelectorAll('.nb').forEach(function(b){ b.classList.toggle('active',b.dataset.id===id); });
+            var el=document.getElementById(id);
+            if(!el)return;
+            var tb=el.querySelector('.tb');
+            if(tb) tb.classList.add('open');
+            var main=document.getElementById('main');
+            var top=el.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop - 20;
+            main.scrollTo({top:top,behavior:'smooth'});
+        });
+    });
+</script>
+</body>
+</html>
